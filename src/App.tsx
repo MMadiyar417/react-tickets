@@ -1,6 +1,10 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import TicketList from './components/TicketList';
 import Filter from './components/Filter';
+import { setCurrency, setTransfers } from './store/slice';
+import { useTranslation } from 'react-i18next';
+import i18n from './i18n';
 
 type Ticket = {
   origin: string;
@@ -17,11 +21,13 @@ type Ticket = {
 };
 
 const App: React.FC = () => {
-  const [tickets, setTickets] = useState<Ticket[]>([]);
-  const [filteredTickets, setFilteredTickets] = useState<Ticket[]>([]);
-  const [selectedTransfers, setSelectedTransfers] = useState<number[]>([]);
-  const [error, setError] = useState<string | null>(null);
-  const [selectedCurrency, setSelectedCurrency] = useState<string>('USD'); 
+  const { t } = useTranslation(); // Изменение здесь
+  const dispatch = useDispatch();
+  const selectedCurrency = useSelector((state: { app: { selectedCurrency: string } }) => state.app.selectedCurrency);
+  const selectedTransfers = useSelector((state: { app: { selectedTransfers: number[] } }) => state.app.selectedTransfers);
+  const [tickets, setTickets] = React.useState<Ticket[]>([]);
+  const [filteredTickets, setFilteredTickets] = React.useState<Ticket[]>([]);
+  const [error, setError] = React.useState<string | null>(null);
 
   useEffect(() => {
     const fetchTickets = async () => {
@@ -47,11 +53,9 @@ const App: React.FC = () => {
 
   useEffect(() => {
     if (selectedTransfers.length === 0) {
-      setFilteredTickets(tickets); 
+      setFilteredTickets(tickets);
     } else {
       const filtered = tickets.filter(ticket => selectedTransfers.includes(ticket.stops));
-      console.log('Выбранные фильтры пересадок:', selectedTransfers); 
-      console.log('Отфильтрованные билеты:', filtered); 
       setFilteredTickets(filtered);
     }
   }, [selectedTransfers, tickets]);
@@ -61,43 +65,48 @@ const App: React.FC = () => {
   }, [filteredTickets]);
 
   const handleCurrencyChange = (currency: string) => {
-    setSelectedCurrency(currency);
+    dispatch(setCurrency(currency));
+  };
+
+  const handleFilterChange = (transfers: number[]) => {
+    dispatch(setTransfers(transfers));
+  };
+
+  const changeLanguage = (lng: string) => {
+    i18n.changeLanguage(lng).catch((error) => {
+      console.error('Ошибка смены языка:', error);
+    });
   };
 
   return (
     <div className="app">
-    <h1 className="app__title">Выдача билетов</h1>
-    {error && <p className="app__error" style={{ color: 'red' }}>{error}</p>}
-    <div className="content">
-      <div className="filters-container">
-        <div className="currency-selector">
-          <button 
-            onClick={() => handleCurrencyChange('RUB')} 
-            className={`currency-selector__button currency-selector__button--left ${selectedCurrency === 'RUB' ? 'active' : ''}`}
-          >
-            RUB
-          </button>
-          <button 
-            onClick={() => handleCurrencyChange('USD')} 
-            className={`currency-selector__button currency-selector__button--middle ${selectedCurrency === 'USD' ? 'active' : ''}`}
-          >
-            USD
-          </button>
-          <button 
-            onClick={() => handleCurrencyChange('EUR')} 
-            className={`currency-selector__button currency-selector__button--right ${selectedCurrency === 'EUR' ? 'active' : ''}`}
-          >
-            EUR
-          </button>
+      <h1 className="app__title">{t('React Tickets')}</h1>
+      {error && <p className="app__error" style={{ color: 'red' }}>{error}</p>}
+      <div className="content">
+        <div className="filters-container">
+          <div className="currency-selector">
+            <button onClick={() => handleCurrencyChange('RUB')} className={`currency-selector__button currency-selector__button--left ${selectedCurrency === 'RUB' ? 'active' : ''}`}>
+              RUB
+            </button>
+            <button onClick={() => handleCurrencyChange('USD')} className={`currency-selector__button currency-selector__button--middle ${selectedCurrency === 'USD' ? 'active' : ''}`}>
+              USD
+            </button>
+            <button onClick={() => handleCurrencyChange('EUR')} className={`currency-selector__button currency-selector__button--right ${selectedCurrency === 'EUR' ? 'active' : ''}`}>
+              EUR
+            </button>
+          </div>
+          <div className="language-selector">
+            <span>{t('language')}:</span> 
+            <button onClick={() => changeLanguage('en')}>EN</button>
+            <button onClick={() => changeLanguage('ru')}>RU</button>
+          </div>
+          <Filter onFilterChange={handleFilterChange} />
         </div>
-        <Filter onFilterChange={setSelectedTransfers} />
-      </div>
-      <div className="ticket-container">
-        <TicketList tickets={sortedTickets} selectedCurrency={selectedCurrency} />
+        <div className="ticket-container">
+          <TicketList tickets={sortedTickets} selectedCurrency={selectedCurrency} />
+        </div>
       </div>
     </div>
-  </div>
-  
   );
 };
 

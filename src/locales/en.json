@@ -1,0 +1,25 @@
+{
+    "tickets": "Tickets",
+    "language": "Language",
+    "currency": "Currency",
+    "RUB": "RUB",
+    "USD": "USD",
+    "EUR": "EUR",
+    "stops": "Stops",
+    "noStops": "No stops",
+    "oneStop": "1 stop",
+    "twoStops": "2 stops",
+    "threeStops": "3 stops",
+    "error": "Data loading error",
+    "buyFor": "Buy for",
+    "noTickets": "No tickets available matching the filters",
+    "months": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+    "weekDays": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+    "cities": {
+      "VVO": "Vladivostok",
+      "TLV": "Tel Aviv",
+      "UFA": "Ufa",
+      "LRN": "Larnaca"
+    }
+  }
+  

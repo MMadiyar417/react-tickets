@@ -1,4 +1,3 @@
-/* Общие стили */
 .app {
   font-family: Arial, sans-serif;
   padding: 20px;
@@ -14,7 +13,6 @@
   font-size: 14px;
 }
 
-/* Контейнеры */
 .content {
   display: flex;
   gap: 20px;
@@ -33,7 +31,6 @@
   gap: 20px;
 }
 
-/* Стили для списка билетов */
 .ticket-list {
   display: flex;
   flex-wrap: wrap;
@@ -101,7 +98,6 @@
   margin: 5px 0;
 }
 
-/* Стили для фильтров */
 .filter {
   width: 250px;
   background-color: #f0f0f0;
@@ -131,7 +127,6 @@
   font-size: 14px;
 }
 
-/* Стили для кнопок выбора валюты */
 .currency-selector {
   display: flex;
   gap: 10px;
@@ -172,7 +167,20 @@
   font-size: 16px;
   color: #555;
 }
-
+.language-selector{
+  margin-top: 20px;
+  display: flex;
+  gap: 10px;
+}
+.language-selector button {
+  cursor: pointer;
+  border: 1px solid #2196f3;
+  background: none;
+  color: #2196f3;
+  height: 30px;
+  width: 50px;
+  border-radius: 4px;
+}
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
